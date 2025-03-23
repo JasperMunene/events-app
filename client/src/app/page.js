@@ -1,10 +1,10 @@
+import Navbar from '@/components/Navbar'
 import React from 'react'
-import Dashboard from './admin/dashboard/Dashboard'
 
 const Home = () => {
   return (
     <div>
-      <Dashboard />
+      <Navbar />
     </div>
   )
 }
