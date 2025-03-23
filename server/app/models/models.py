@@ -10,7 +10,7 @@ class User(db.Model):
     phone = db.Column(db.String(20), unique=True)
     password_hash = db.Column(db.Text, nullable=False)
     user_type = db.Column(db.String(20), nullable=False, default="buyer")
-
+    avator_url = db.Column(db.String(255), nullable=True, default="https://i.pinimg.com/736x/cd/4b/d9/cd4bd9b0ea2807611ba3a67c331bff0b.jpg")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     __table_args__ = (
@@ -26,7 +26,7 @@ class Event(db.Model):
     location = db.Column(db.String(255))
     status = db.Column(db.String(20), nullable=False, default="upcoming")
     event_capacity = db.Column(db.Integer, nullable=False, default=0)  # New column
-
+    poster_url = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     organizer = db.relationship("User", backref="events")

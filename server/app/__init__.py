@@ -36,7 +36,7 @@ def create_app():
 
     class HomeResource(Resource):
         def get(self):
-            return {"message": "Ha! gatcha!!!!! We're changing the world... join us and build the future, submit your resume @ careers.bytesmile.dev"}, 200
+            return {"message": "Ha! gatcha!!!!! We're changing the world... join us and build the future, submit your resume @ careers@bytesmile.dev"}, 200
 
     # Register API Endpoints
     api.add_resource(HomeResource, "/")
