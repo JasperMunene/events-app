@@ -2,22 +2,18 @@ from flask import request, jsonify
 from flask_restful import Resource, reqparse
 from datetime import datetime, timedelta
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from functools import wraps
 from app.database import db
-from app.models.models import User, Event
-
+from app.models.models import User, Event, Ticket
 
 class Addevent(Resource):
     @jwt_required()
     def post(self):
-        user_id = get_jwt_identity()  # Get user ID from JWT
+        user_id = get_jwt_identity()
         user = User.query.filter_by(id=user_id).first()
 
-        # Check if the user is an organizer
         if not user or user.user_type != "organizer":
             return {"message": "Unauthorized. Only organizers can add events."}, 403
 
-        # Parse request data
         parser = reqparse.RequestParser()
         parser.add_argument("name", type=str, required=True, help="Event name is required")
         parser.add_argument("description", type=str, required=False)
@@ -27,7 +23,6 @@ class Addevent(Resource):
         parser.add_argument("poster_url", type=str, required=True, help="Poster Image is required")
         args = parser.parse_args()
 
-        # Validate & convert date
         try:
             event_date = datetime.strptime(args["date"], "%Y-%m-%d %H:%M:%S")
             if event_date < datetime.utcnow():
@@ -35,11 +30,9 @@ class Addevent(Resource):
         except ValueError:
             return {"message": "Invalid date format. Use YYYY-MM-DD HH:MM:SS."}, 400
 
-        # Validate event capacity
         if args["event_capacity"] < 0:
             return {"message": "Event capacity must be zero or more."}, 400
 
-        # Create a new event instance
         new_event = Event(
             name=args["name"],
             description=args.get("description", ""),
@@ -47,10 +40,9 @@ class Addevent(Resource):
             date=event_date,
             event_capacity=args["event_capacity"],
             poster_url=args["poster_url"],
-            organizer_id=user_id  # Assign event to logged-in user
+            organizer_id=user_id
         )
 
-        # Save to DB
         try:
             db.session.add(new_event)
             db.session.commit()
@@ -61,20 +53,31 @@ class Addevent(Resource):
 
 class GetEvents(Resource):
     def get(self):
-        # Get pagination params (default: page=1, per_page=10)
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", 10, type=int)
-        # Query paginated events
         events_pagination = Event.query.paginate(page=page, per_page=per_page, error_out=False)
 
-        # If requested page is out of range, return page 1 instead
         if page > events_pagination.pages and events_pagination.pages > 0:
             page = 1
             events_pagination = Event.query.paginate(page=page, per_page=per_page, error_out=False)
 
-        # Format response
-        events_list = [
-            {
+        events_list = []
+        for event in events_pagination.items:
+            tickets = Ticket.query.filter_by(event_id=event.id).all()
+            tickets_list = [
+                {
+                    "id": ticket.id,
+                    "event_id": ticket.event_id,
+                    "name": ticket.name,
+                    "price": ticket.price,
+                    "total_quantity": ticket.total_quantity,
+                    "available_quantity": ticket.available_quantity,
+                    "created_at": ticket.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                }
+                for ticket in tickets
+            ]
+
+            events_list.append({
                 "id": event.id,
                 "name": event.name,
                 "description": event.description,
@@ -84,9 +87,8 @@ class GetEvents(Resource):
                 "event_capacity": event.event_capacity,
                 "poster_url": event.poster_url,
                 "organizer_id": event.organizer_id,
-            }
-            for event in events_pagination.items
-        ]
+                "tickets": tickets_list,
+            })
 
         return {
             "events": events_list,
