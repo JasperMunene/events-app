@@ -7,6 +7,7 @@ from app.database import db
 from app.routes.auth_routes import Register, Login, Profile
 from app.routes.event_routes import Addevent, GetEvents, GetEvent
 from app.routes.ticket_routes import AddTickets, GetTickets, DeleteTicket, EditTicket
+from app.routes.order_routes import CreateOrder, GetUserOrders, UpdateOrderStatus
 from flask_cors import CORS
 from datetime import timedelta
 
@@ -50,5 +51,8 @@ def create_app():
     api.add_resource(GetTickets, "/event/<int:event_id>/get_tickets")
     api.add_resource(EditTicket, "/ticket/<int:ticket_id>/edit")
     api.add_resource(DeleteTicket, "/ticket/<int:ticket_id>/delete")
+    api.add_resource(CreateOrder, "/orders/new")
+    api.add_resource(GetUserOrders, "/orders/get")
+    api.add_resource(UpdateOrderStatus, "/orders/<int:order_id>/update")
 
     return app
