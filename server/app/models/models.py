@@ -27,6 +27,7 @@ class Event(db.Model):
     status = db.Column(db.String(20), nullable=False, default="upcoming")
     event_capacity = db.Column(db.Integer, nullable=False, default=0)  # New column
     poster_url = db.Column(db.String(255), nullable=True)
+    category = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     organizer = db.relationship("User", backref="events")

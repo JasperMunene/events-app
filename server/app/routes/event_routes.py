@@ -21,6 +21,7 @@ class Addevent(Resource):
         parser.add_argument("date", type=str, required=True, help="Date is required (YYYY-MM-DD HH:MM:SS)")
         parser.add_argument("event_capacity", type=int, required=True, help="Capacity is required")
         parser.add_argument("poster_url", type=str, required=True, help="Poster Image is required")
+        parser.add_argument("category", type=str, required=True, help="event category is required")
         args = parser.parse_args()
 
         try:
@@ -40,6 +41,7 @@ class Addevent(Resource):
             date=event_date,
             event_capacity=args["event_capacity"],
             poster_url=args["poster_url"],
+            category = args["category"],
             organizer_id=user_id
         )
 
@@ -107,6 +109,7 @@ class GetEvents(Resource):
                 "status": event.status,
                 "event_capacity": event.event_capacity,
                 "poster_url": event.poster_url,
+                "category": event.category,
                 "organizer_id": event.organizer_id,
                 "tickets": tickets_list,
             })
@@ -150,6 +153,7 @@ class GetEvent(Resource):
             "status": event_query.status,
             "event_capacity": event_query.event_capacity,
             "poster_url": event_query.poster_url,
+            "category": event_query.category,
             "organizer_id": event_query.organizer_id,
-            "tickets": tickets_list,
+            "tickets": tickets_list
         }, 200
