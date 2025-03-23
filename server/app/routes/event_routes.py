@@ -50,16 +50,37 @@ class Addevent(Resource):
         except Exception as e:
             db.session.rollback()
             return {"message": "Error adding event", "error": str(e)}, 500
+        
+def apply_filters(query, search, location, date):
+    if search:
+        query = query.filter(Event.name.ilike(f"%{search}%") | Event.description.ilike(f"%{search}%"))
+    if location:
+        query = query.filter(Event.location.ilike(f"%{location}%"))
+    if date:
+        try:
+            event_date = datetime.strptime(date, "%Y-%m-%d")
+            query = query.filter(Event.date >= event_date)
+        except ValueError:
+            pass  # Ignore invalid date format
+    return query
 
 class GetEvents(Resource):
     def get(self):
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", 10, type=int)
-        events_pagination = Event.query.paginate(page=page, per_page=per_page, error_out=False)
+        search = request.args.get("search", type=str)
+        location = request.args.get("location", type=str)
+        date = request.args.get("date", type=str)
+
+        # Apply filters
+        query = Event.query
+        query = apply_filters(query, search, location, date)
+
+        events_pagination = query.paginate(page=page, per_page=per_page, error_out=False)
 
         if page > events_pagination.pages and events_pagination.pages > 0:
             page = 1
-            events_pagination = Event.query.paginate(page=page, per_page=per_page, error_out=False)
+            events_pagination = query.paginate(page=page, per_page=per_page, error_out=False)
 
         events_list = []
         for event in events_pagination.items:

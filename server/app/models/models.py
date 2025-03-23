@@ -99,7 +99,6 @@ class CheckIn(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     ticket_id = db.Column(db.Integer, db.ForeignKey("tickets.id", ondelete="CASCADE"), nullable=False)
     checked_in_at = db.Column(db.DateTime, default=datetime.utcnow)
-
     user = db.relationship("User", backref="checkins")
     ticket = db.relationship("Ticket", backref="checkins")
     
