@@ -24,6 +24,7 @@ class Addevent(Resource):
         parser.add_argument("location", type=str, required=True, help="Location is required")
         parser.add_argument("date", type=str, required=True, help="Date is required (YYYY-MM-DD HH:MM:SS)")
         parser.add_argument("event_capacity", type=int, required=True, help="Capacity is required")
+        parser.add_argument("poster_url", type=str, required=True, help="Poster Image is required")
         args = parser.parse_args()
 
         # Validate & convert date
@@ -45,6 +46,7 @@ class Addevent(Resource):
             location=args["location"],
             date=event_date,
             event_capacity=args["event_capacity"],
+            poster_url=args["poster_url"],
             organizer_id=user_id  # Assign event to logged-in user
         )
 
@@ -62,7 +64,6 @@ class GetEvents(Resource):
         # Get pagination params (default: page=1, per_page=10)
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", 10, type=int)
-
         # Query paginated events
         events_pagination = Event.query.paginate(page=page, per_page=per_page, error_out=False)
 
@@ -81,6 +82,7 @@ class GetEvents(Resource):
                 "date": event.date.strftime("%Y-%m-%d %H:%M:%S"),
                 "status": event.status,
                 "event_capacity": event.event_capacity,
+                "poster_url": event.poster_url,
                 "organizer_id": event.organizer_id,
             }
             for event in events_pagination.items
