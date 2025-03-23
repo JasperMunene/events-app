@@ -120,3 +120,36 @@ class GetEvents(Resource):
             "has_next": events_pagination.has_next,
             "has_prev": events_pagination.has_prev,
         }, 200
+
+class GetEvent(Resource):
+    def get(self, event_id):
+        event_query = Event.query.get(event_id)
+        if not event_query:
+            return {"error": "Event not found"}, 404
+        
+        tickets = Ticket.query.filter_by(event_id=event_query.id).all()
+        tickets_list = [
+            {
+                "id": ticket.id,
+                "event_id": ticket.event_id,
+                "name": ticket.name,
+                "price": ticket.price,
+                "total_quantity": ticket.total_quantity,
+                "available_quantity": ticket.available_quantity,
+                "created_at": ticket.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+            }
+            for ticket in tickets
+        ]
+
+        return {
+            "id": event_query.id,
+            "name": event_query.name,
+            "description": event_query.description,
+            "location": event_query.location,
+            "date": event_query.date.strftime("%Y-%m-%d %H:%M:%S"),
+            "status": event_query.status,
+            "event_capacity": event_query.event_capacity,
+            "poster_url": event_query.poster_url,
+            "organizer_id": event_query.organizer_id,
+            "tickets": tickets_list,
+        }, 200

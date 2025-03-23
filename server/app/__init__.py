@@ -5,7 +5,7 @@ from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from app.database import db
 from app.routes.auth_routes import Register, Login, Profile
-from app.routes.event_routes import Addevent, GetEvents
+from app.routes.event_routes import Addevent, GetEvents, GetEvent
 from app.routes.ticket_routes import AddTickets, GetTickets, DeleteTicket, EditTicket
 from flask_cors import CORS
 from datetime import timedelta
@@ -43,10 +43,11 @@ def create_app():
     api.add_resource(Register, "/auth/register")
     api.add_resource(Login, "/auth/login")
     api.add_resource(Profile, "/profile")
-    api.add_resource(Addevent, '/events/add')
+    api.add_resource(Addevent, '/event/add')
     api.add_resource(GetEvents, '/events/get')
-    api.add_resource(AddTickets, "/events/<int:event_id>/add_ticket")
-    api.add_resource(GetTickets, "/events/<int:event_id>/get_tickets")
+    api.add_resource(GetEvent, '/event/<int:event_id>')
+    api.add_resource(AddTickets, "/event/<int:event_id>/add_ticket")
+    api.add_resource(GetTickets, "/event/<int:event_id>/get_tickets")
     api.add_resource(EditTicket, "/ticket/<int:ticket_id>/edit")
     api.add_resource(DeleteTicket, "/ticket/<int:ticket_id>/delete")
 
