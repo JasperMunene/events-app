@@ -1,60 +1,20 @@
-import { ChevronRightIcon, MapPinIcon } from "lucide-react";
 import React from "react";
+import { ChevronRightIcon, MapPinIcon } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import Link from "next/link";
 import { Button } from "../ui/button";
 
-export const UpcomingEventsSection = () => {
-  // Event data for mapping
-  const events = [
-    {
-      id: 1,
-      title: "Panic! at the Disco",
-      price: "KES. 45,000 - 150,000",
-      location: "Uhuru Gardens",
-      month: "NOV",
-      day: "01",
-      image: "/rectangle-2.png",
-    },
-    {
-      id: 2,
-      title: "Hamilton the Musical",
-      price: "KES. 1000 - 10,000",
-      location: "The O2 Arena",
-      month: "NOV",
-      day: "02",
-      image: "/rectangle-2-13.svg",
-    },
-    {
-      id: 3,
-      title: "Anastasia the Musical",
-      price: "KES. 8500 - 20,000",
-      location: "Sarit Expo Center",
-      month: "NOV",
-      day: "03",
-      image: "/rectangle-2-1.png",
-    },
-    {
-      id: 4,
-      title: "Ali Abdaal Seminar",
-      price: "Free",
-      location: "Online",
-      month: "NOV",
-      day: "06",
-      image: "/rectangle-2-12.svg",
-    },
-  ];
 
+
+export const UpcomingEventsSection= ({ title, events }) => {
+  const containerMargin = title === "Upcoming Events" ? "mt-[350px]" : "mt-24";
   return (
-    <div className="mt-[350px] container mx-auto px-4 md:px-6 lg:px-8 xl:px-[120px] max-w-[1920px]">
+    <div className={`${containerMargin} container mx-auto px-4 md:px-6 lg:px-8 xl:px-[120px] max-w-[1920px]`}>
       <div className="flex justify-between items-center mb-8">
         <h2 className="font-[family-name:var(--font-geist-sans)] font-semibold text-[30px]">
-          Upcoming Events
+          {title}
         </h2>
-        <Link
-          href='/'
-          className=" p-1.5 h-auto flex"
-        >
+        <Link href='/' className="p-1.5 h-auto flex">
           <span className="text-[#4F4CEE] text-[14px] font-bold font-[family-name:var(--font-geist-sans)]">
             View All
           </span>
