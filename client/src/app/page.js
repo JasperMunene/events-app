@@ -4,6 +4,7 @@ import Hero from '@/components/landing/Hero';
 import { UpcomingEventsSection, Event } from '@/components/landing/UpcomingEvents';
 import { TopSellingSection } from '@/components/landing/TopSelling';
 import { HotOffers } from '@/components/landing/HotOffers';
+import { FooterSection } from '@/components/landing/Footer';
 
 const Home = () => {
   // Event data to pass as props
@@ -135,6 +136,7 @@ const Home = () => {
       <TopSellingSection />
       <UpcomingEventsSection title="Browse Arts" events={artExhibitions} />
       <UpcomingEventsSection title="Browse Concerts" events={concerts} />
+      <FooterSection />
     </div>
   );
 };
