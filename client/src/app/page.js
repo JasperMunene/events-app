@@ -2,6 +2,8 @@ import React from 'react'
 import Navbar from '@/components/landing/Navbar'
 import Hero from '@/components/landing/Hero'
 import { UpcomingEventsSection } from '@/components/landing/UpcomingEvents'
+import { TopSellingSection } from '@/components/landing/TopSelling'
+
 
 const Home = () => {
   return (
@@ -9,8 +11,9 @@ const Home = () => {
       <Navbar />
       <Hero />
       <UpcomingEventsSection />
-    </div>
+      <TopSellingSection />
 
+    </div>
   )
 }
 
