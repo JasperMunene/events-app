@@ -70,3 +70,4 @@ wikipedia
 Wikipedia-API
 wsproto
 zipp
+gunicorn
