@@ -8,7 +8,7 @@ class User(db.Model):
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     phone = db.Column(db.String(20), unique=True)
-    password_hash = db.Column(db.Text, nullable=False)
+    password_hash = db.Column(db.Text, nullable=True)
     user_type = db.Column(db.String(20), nullable=False, default="buyer")
     avator_url = db.Column(db.String(255), nullable=True, default="https://i.pinimg.com/736x/cd/4b/d9/cd4bd9b0ea2807611ba3a67c331bff0b.jpg")
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
